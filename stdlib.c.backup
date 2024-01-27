@@ -1,0 +1,147 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int strlen(const char *str)
+{
+	int length = 0;
+	while(str[length] != '\0')
+	{
+		length = length +1;
+	}
+	length = length +1;
+	return length;
+}	
+
+int strcmp(char *str0, char *str1)
+{
+	int i = 0;
+	while((str0[i] == str1[i]) & (str0[i] != '\0'))
+	{
+		i = i +1;
+	}
+	i = i +1;	
+	if(strlen(str1) != i)
+		return 1;
+	return 0;
+}
+
+char *strdup(char *str)
+{
+	char *dupofstr = (char *)malloc(strlen(str)*sizeof(char));
+	int lengh = 0;
+	while(str[lengh] != '\0')
+	{
+		dupofstr[lengh] = str[lengh];
+		lengh = lengh +1;
+	}
+	dupofstr[lengh] = str[lengh];
+	return dupofstr;
+}
+
+
+char *strndup(const char *str, int len)
+{
+	char *dupofstr = (char *)malloc(len*sizeof(char));
+	int lengh = 0;
+	while(lengh < len)
+	{
+		dupofstr[lengh] = str[lengh];
+		lengh = lengh +1;
+	}
+	dupofstr[lengh] = str[lengh];
+	return dupofstr;
+}
+
+int *strcontains(const char *str0, const char *str1)
+{
+	int i = 0, j = 0;
+	while(str0[i+j] != '\0')
+	{
+		if((str0[i+j] == str1[j]) & (str1[j] != '\0'))
+		{
+			j = j +1;
+		}
+		else{
+			i = i +1;
+			j = 0;
+		}
+		if((j+1) == strlen(str1))
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+char **strsplit(char *str, char *spliter)
+{
+	char **array = (char **)malloc(1*sizeof(char *));
+	char *data_spliter;
+	int c = 0;
+	int i = 0;
+	int j = 0;
+	int a = 0;
+	array[a] = (char *)malloc((strlen(spliter)*sizeof(char)));
+	while(str[i] != '\0')
+	{
+		data_spliter = (char *)malloc(strlen(spliter)*sizeof(char));	
+		while(j < strlen(spliter)-1)
+		{
+			data_spliter[j] = str[i+j];
+			j =j +1;
+		}
+		if(strcmp(data_spliter, spliter) == 1)
+		{
+			array[a] = (char *)realloc(array[a], ((c+j+1)*strlen(spliter)*sizeof(char)));
+			j = 0;	
+			while(j < strlen(data_spliter))
+			{	
+				array[a][c+j] = data_spliter[c+j];
+				j = j +1;	
+			}
+			c = c +j;
+		}
+		else{
+			array[a][c] = '\0';
+			a = a +1;
+			array = (char **)realloc(array, (a+1)*sizeof(char *));
+			array[a] = (char *)malloc((strlen(spliter)*sizeof(char)));
+			c = 0;	
+		}
+		j = 0;	
+		i = i +1;	
+	}
+	a = a +1;
+	array = (char **)realloc(array, (a+1)*sizeof(char *));
+	array[a] = (char *)malloc(sizeof(char));
+	array[a] = '\0';
+	return array;
+}
+
+char *read_io(int fd)
+{
+	int i = 0;
+	char *buffer = (char *)malloc(sizeof(char));
+	while(read(fd, buffer[i], sizeof(char)) > 1)
+	{
+		i = i +1;
+		buffer = (char *)realloc(buffer, (i+1)*sizeof(char));
+	}
+	buffer[i] = '\0';
+	return buffer;
+}
+
+char *read_io_dw()
+{
+	int i = 0;
+	char *buffer = (char *)malloc(sizeof(char));
+	do{
+		i = i + 1;
+		read(1, buffer[i-1], sizeof(char));
+		buffer = (char *)realloc(buffer, (i+1)*sizeof(char));
+	}while(buffer[i-1] != '\n');
+	buffer[i] = '\0';
+	return buffer;
+}
+
