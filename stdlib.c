@@ -312,7 +312,6 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 	int len = 0;
 	int i = 0;
 	int c = 0;
-	int f = 1;
 	while(buffer[len] != '\0')
 	{
 		while(i < strlen(key))
@@ -323,7 +322,6 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 		i = 0;
 		if(strcmp(cmp, key) == 0)
 		{
-			f = 0;
 			while(buffer[len] != '\n')
 			{
 				data[i] = buffer[len];
@@ -333,13 +331,9 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 			}
 			data[i] = '\0';
 			i = 0;
-		}
-		if(f == 0)
-		{
 			array[c] = strdup(data);
 			c = c +1;
 			array = (char **)realloc(array, (c+1)*sizeof(char *));
-			f = 1;
 		}
 		len = len +1;
 		if((c == number_of_lines)&(number_of_lines != -1))
