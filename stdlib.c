@@ -304,13 +304,15 @@ void print(const char *str, const char *type)
         }
 }
 
-char *get_data_by_key(char *buffer, char *key)
+char **get_data_by_key(char *buffer, char *key)
 {
+	char **array = (char **)malloc(sizeof(char *));
 	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
 	char *data = (char *)malloc(sizeof(char));
 	int len = 0;
 	int i = 0;
-	int found = 1;
+	int c = 0;
+	int f = 1;
 	while(buffer[len] != '\0')
 	{
 		while(i < strlen(key))
@@ -321,7 +323,7 @@ char *get_data_by_key(char *buffer, char *key)
 		i = 0;
 		if(strcmp(cmp, key) == 0)
 		{
-			found = 0;
+			f = 0;
 			while(buffer[len] != '\n')
 			{
 				data[i] = buffer[len];
@@ -332,9 +334,16 @@ char *get_data_by_key(char *buffer, char *key)
 			data[i] = '\0';
 			i = 0;
 		}
-		if(found == 0)
-			break;
+		if(f == 0)
+		{
+			array[c] = strdup(data);
+			printf("array[%d] = %s\n", c, array[c]);
+			c = c +1;
+			array = (char **)realloc(array, (c+1)*sizeof(char *));
+			f = 1;
+		}
 		len = len +1;
 	}
-	return data;	
+	array[c] = '\0';
+	return array;	
 }
