@@ -146,19 +146,17 @@ char *read_io()
 char *read_file(const char *restrict file_name, const char *restrict mode)
 {
 	FILE *restrict fd = fopen(file_name, mode);
-	char *buffer = (char *)malloc(sizeof(char));
-	if(buffer == NULL)
+	if(fd == NULL)
 		return NULL;
+	char *buffer = (char *)malloc(sizeof(char));
 	int buffer_len = 0;
 	do
 	{
-		fread(buffer+(buffer_len*sizeof(char)), sizeof(char), 1, fd);
 		buffer_len = buffer_len +1;
+		fread(&(*(buffer+((buffer_len-1)*sizeof(char)))), sizeof(char), 1, fd);
 		buffer = (char *)realloc(buffer, (buffer_len+1)*sizeof(char));
-		if(buffer == NULL)
-			return NULL;
-	}while(buffer[buffer_len] != EOF);
-	buffer[buffer_len] = '\0';
+	}while(*(buffer+((buffer_len-1)*sizeof(char))) != EOF);
+	*(buffer+((buffer_len-1)*sizeof(char))) = '\0';
 	return buffer;
 }
 
@@ -261,9 +259,14 @@ void convert_hexa_to_binary(int *array, int mask, char hexa)
 	}
 }
 
-int convert_char_to_int(char c)
+long convert_char_to_int(char str)
 {
-	return (int)strtol(&c, NULL, 10);
+	return str - '0' + 48;
+}
+
+char convert_int_to_char(long n)
+{
+	return n - 48 + '0';
 }
 
 double pow(double x, double y)
@@ -299,4 +302,39 @@ void print(const char *str, const char *type)
                 }
                 fwrite(str+(buffer_len*sizeof(char)), sizeof(char), 1, stdout);
         }
+}
+
+char *get_data_by_key(char *buffer, char *key)
+{
+	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
+	char *data = (char *)malloc(sizeof(char));
+	int len = 0;
+	int i = 0;
+	int found = 1;
+	while(buffer[len] != '\0')
+	{
+		while(i < strlen(key))
+		{
+			cmp[i] = buffer[len+i];
+			i = i +1;	
+		}
+		i = 0;
+		if(strcmp(cmp, key) == 0)
+		{
+			found = 0;
+			while(buffer[len] != '\n')
+			{
+				data[i] = buffer[len];
+				i = i +1;
+				len = len +1;
+				data = (char *)realloc(data, (i+1)*sizeof(char));
+			}
+			data[i] = '\0';
+			i = 0;
+		}
+		if(found == 0)
+			break;
+		len = len +1;
+	}
+	return data;	
 }
