@@ -16,4 +16,4 @@ long convert_char_to_int(char c);
 char convert_int_to_char(long n);
 int convert_binary_to_integer(int *array, int architecture);
 void print(const char *str, const char *type);
-char **get_data_by_key(char *buffer, char *key);
+char **get_data_by_key(char *buffer, char *key, int number_of_lines);

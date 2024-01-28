@@ -304,7 +304,7 @@ void print(const char *str, const char *type)
         }
 }
 
-char **get_data_by_key(char *buffer, char *key)
+char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 {
 	char **array = (char **)malloc(sizeof(char *));
 	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
@@ -342,6 +342,8 @@ char **get_data_by_key(char *buffer, char *key)
 			f = 1;
 		}
 		len = len +1;
+		if((c == number_of_lines)&(number_of_lines != -1))
+			break;
 	}
 	array[c] = '\0';
 	return array;	
