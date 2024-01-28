@@ -337,7 +337,6 @@ char **get_data_by_key(char *buffer, char *key)
 		if(f == 0)
 		{
 			array[c] = strdup(data);
-			printf("array[%d] = %s\n", c, array[c]);
 			c = c +1;
 			array = (char **)realloc(array, (c+1)*sizeof(char *));
 			f = 1;
