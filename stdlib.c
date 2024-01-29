@@ -336,6 +336,8 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 			data[i] = '\0';
 			i = 0;
 			array[c] = strdup(data);
+			free(data);
+			data = (char *)malloc(sizeof(char));
 			c = c +1;
 			array = (char **)realloc(array, (c+1)*sizeof(char *));
 		}
@@ -344,6 +346,7 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 			break;
 	}
 	array[c] = '\0';
+	free(cmp);
 	return array;	
 }
 
