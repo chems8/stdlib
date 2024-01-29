@@ -342,3 +342,42 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 	array[c] = '\0';
 	return array;	
 }
+
+char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *end)
+{
+	char **array = (char **)malloc(sizeof(char *));
+	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
+	char *data = (char *)malloc(sizeof(char));
+	int len = 0;
+	int i = 0;
+	int j = 0;
+	while(buffer[len] != '\0')
+	{
+		while(i < strlen(key))
+		{
+			cmp[i] = buffer[len+i];
+			i = i +1;	
+		}
+		i = 0;
+		if(strcmp(cmp, key) == 0)
+		{
+			while(strcmp(cmp, end) != 0)
+			{
+				data[j] = buffer[len];
+				j = j +1;
+				len = len +1;
+				data = (char *)realloc(data, (j+1)*sizeof(char));
+				while(i < strlen(key))
+				{	
+					cmp[i] = buffer[len+i]; 
+					i = i +1;
+				}
+				i = 0;
+			}
+			break;
+		}
+		len = len +1;
+	}
+	data[j] = '\0';	
+	return data;
+}	
