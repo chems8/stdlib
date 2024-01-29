@@ -41,6 +41,25 @@ char *strdup(const char *str)
 	return dupofstr;
 }
 
+char *strstrip(const char *s, const char *c)
+{
+	int i = 0;
+	int j = 0;
+	char *string = (char *)malloc(sizeof(char));
+	while(s[j] != '\0')
+	{
+		if(s[j] != *c)
+		{
+			string[i] = s[j];
+			i = i +1;
+			string = (char *)realloc(string, (i+1)*sizeof(char));
+		}
+		j = j +1;
+	}
+	string[i] = '\0';
+	return string;
+}
+
 const int strcontains(const char *str0, const char *str1)
 {
 	int i = 0, j = 0;

@@ -1,6 +1,7 @@
 long unsigned int strlen(const char *str);
 const int strcmp(const char *str0, const char *str1);
 char *strdup(const char *str);
+char *strstrip(const char *s, const char *c);
 const int *strcontains(const char *str0, const char *str1);
 char **strsplit(char *str, char *spliter);
 char *read_io();
@@ -12,7 +13,7 @@ const int shift_result_right(const int number, const int i);
 void *convert_integer_to_binary(int *array, int mask, const int number);
 int convert_hexa_to_int(char hexa);
 void convert_hexa_to_binary(int *array, int mask, char hexa);
-long convert_char_to_int(char c);
+long convert_char_to_int(char *c);
 char convert_int_to_char(long n);
 int convert_binary_to_integer(int *array, int architecture);
 void print(const char *str, const char *type);
