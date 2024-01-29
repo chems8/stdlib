@@ -82,6 +82,8 @@ char **strsplit(char *str, char *spliter)
 		j = 0;
 		while(strcmp(data, spliter) == 1)
 		{
+			free(data);
+			data = (char *)malloc(strlen(spliter)*sizeof(char));	
 			while(j < strlen(spliter)-1)
 			{
 				buffer[c] = str[i+j];	
@@ -100,6 +102,8 @@ char **strsplit(char *str, char *spliter)
 				array[a] = strdup(buffer); 	
 				a = a +1;
 				array = (char **)realloc(array, (a+1)*sizeof(char *));
+				free(buffer);
+				buffer = (char *)malloc(sizeof(char));
 			}
 		}
 	}
