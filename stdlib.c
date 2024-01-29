@@ -41,14 +41,14 @@ char *strdup(const char *str)
 	return dupofstr;
 }
 
-char *strstrip(const char *s, const char *c)
+char *strstrip(const char *s, const char c)
 {
 	int i = 0;
 	int j = 0;
 	char *string = (char *)malloc(sizeof(char));
 	while(s[j] != '\0')
 	{
-		if(s[j] != *c)
+		if(s[j] != c)
 		{
 			string[i] = s[j];
 			i = i +1;

@@ -1,7 +1,7 @@
 long unsigned int strlen(const char *str);
 const int strcmp(const char *str0, const char *str1);
 char *strdup(const char *str);
-char *strstrip(const char *s, const char *c);
+char *strstrip(const char *s, const char c);
 const int *strcontains(const char *str0, const char *str1);
 char **strsplit(char *str, char *spliter);
 char *read_io();
