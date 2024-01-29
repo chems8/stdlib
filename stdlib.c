@@ -4,13 +4,13 @@
 
 long unsigned int strlen(const char *str)
 {
-	int length = 0;
-	while(str[length] != '\0')
+	int lengh = 0;
+	while(str[lengh] != '\0')
 	{
-		length = length +1;
+		lengh = lengh +1;
 	}
-	length = length +1;
-	return length;
+	lengh = lengh +1;
+	return lengh;
 }	
 
 const int strcmp(const char *str0, const char *str1)
@@ -65,63 +65,44 @@ const int strcontains(const char *str0, const char *str1)
 char **strsplit(char *str, char *spliter)
 {
 	char **array = (char **)malloc(1*sizeof(char *));
-	if(array == NULL)
-		return NULL;
-	char *data;
+	char *data = (char *)malloc(strlen(spliter)*sizeof(char));	
+	char *buffer = (char *)malloc(sizeof(char));
 	int c = 0;
 	int i = 0;
 	int j = 0;
 	int a = 0;
-	array[a] = (char *)malloc((strlen(spliter)*sizeof(char)));
-	if(array[a] == NULL)
-		return NULL;
 	while(str[i] != '\0')
 	{
-		data = (char *)malloc(strlen(spliter)*sizeof(char));	
-		if(data == NULL)
-			return NULL;
 		while(j < strlen(spliter)-1)
 		{
 			data[j] = str[i+j];
 			j =j +1;
 		}
-		if(strcmp(data, spliter) == 1)
+		data[j] = '\0';
+		j = 0;
+		while(strcmp(data, spliter) == 1)
 		{
-			array[a] = (char *)realloc(array[a], ((c+j+1)*strlen(spliter)*sizeof(char)));
-			if(array[a] == NULL)
-				return NULL;
-			j = 0;	
-			while(j < strlen(data))
-			{	
-				array[a][c+j] = data[c+j];
-				j = j +1;	
+			while(j < strlen(spliter)-1)
+			{
+				buffer[c] = str[i+j];	
+				data[j] = str[i+j];
+				j = j +1;
+				c = c +1;
+				buffer = (char *)realloc(buffer, (c+1)*sizeof(char));
 			}
-			c = c +j;
-		}
-		else{
-			array[a][c] = '\0';
-			a = a +1;
-			array = (char **)realloc(array, (a+1)*sizeof(char *));
-			if(array == NULL)
-				return NULL;
-			array[a] = (char *)malloc((strlen(spliter)*sizeof(char)));
-			if(array[a] == NULL)
-				return NULL;
-			c = 0;	
-		}
-		if(c == 0)
+			data[j] = '\0';
 			i = i +j;
-		else
-			i = i +1;	
-		j = 0;	
+			j = 0;
+			if(strcmp(data, spliter) == 0)
+			{
+				buffer[c] = '\0';
+				c = 0;
+				array[a] = strdup(buffer); 	
+				a = a +1;
+				array = (char **)realloc(array, (a+1)*sizeof(char *));
+			}
+		}
 	}
-	a = a +1;
-	array = (char **)realloc(array, (a+1)*sizeof(char *));
-	if(array == NULL)
-		return NULL;
-	array[a] = (char *)malloc(sizeof(char));
-	if(array[a] == NULL)
-		return NULL;
 	array[a] = '\0';
 	return array;
 }
@@ -336,7 +317,7 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 			array = (char **)realloc(array, (c+1)*sizeof(char *));
 		}
 		len = len +1;
-		if((c == number_of_lines)&(number_of_lines != -1))
+		if((c == number_of_lines)|(number_of_lines != -1))
 			break;
 	}
 	array[c] = '\0';
@@ -345,7 +326,6 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 
 char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *end)
 {
-	char **array = (char **)malloc(sizeof(char *));
 	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
 	char *data = (char *)malloc(sizeof(char));
 	int len = 0;
@@ -358,6 +338,7 @@ char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *en
 			cmp[i] = buffer[len+i];
 			i = i +1;	
 		}
+		cmp[i] = '\0';
 		i = 0;
 		if(strcmp(cmp, key) == 0)
 		{
@@ -372,6 +353,7 @@ char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *en
 					cmp[i] = buffer[len+i]; 
 					i = i +1;
 				}
+				cmp[i] = '\0';
 				i = 0;
 			}
 			break;
