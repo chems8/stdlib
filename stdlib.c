@@ -100,6 +100,32 @@ char *strconcatenate(const char *str0, const char *str1)
 	return buffer;	
 }
 
+int find_string_position(char *buffer, char *string, int position)
+{
+	int i = 0;
+	int j = 0;
+	int position_found = 0;
+	char *str = (char *)malloc(strlen(string)*sizeof(char));
+	while(buffer[i] != '\0')
+	{
+		while(j < strlen(string)-1)
+		{	
+			str[j] = buffer[i];
+			i = i +1;
+			j = j +1;
+		}
+		str[j] = '\0';
+		j = 0;
+		if(strcmp(string, str) == 0)
+		{
+			position_found = position_found +1;
+			if(position_found == position)
+				return i-1;
+		}
+	}
+	return 0;
+}
+
 char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 {
 	char **array = (char **)malloc(sizeof(char *));
@@ -233,18 +259,25 @@ char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *en
 
 char *read_io()
 {
-	int i = 0;
-	char *buffer = (char *)malloc(sizeof(char));
-	if(buffer == NULL)
-		return NULL;
-	while(read(1, (void *)buffer[i], sizeof(char)) > 1)	
+	char *buffer = (char *)malloc(2*sizeof(char));
+	char *buffer_buffer_len_content = (char *)malloc(2*sizeof(char));
+	char *end_of_line = (char *)malloc(2*sizeof(char));
+	int buffer_len = 0;
+	*buffer = ' ';
+	*(buffer+1) = '\0';
+	*end_of_line = '\n';
+	*(end_of_line+1) = '\0';
+	snprintf(buffer_buffer_len_content, 2*sizeof(char), "%c\0", *(buffer+buffer_len));
+	while(strcmp(buffer_buffer_len_content, end_of_line) != 0)
 	{
-		i = i +1;
-		buffer = (char *)realloc(buffer, (i+1)*sizeof(char));
-		if(buffer == NULL)
-			return NULL;
+		read(1, &(*(buffer+buffer_len)), sizeof(char));
+		snprintf(buffer_buffer_len_content, 2*sizeof(char), "%c\0", *(buffer+buffer_len));
+		buffer_len = buffer_len + 1;
+		buffer = (char *)realloc(buffer, (buffer_len+2)*sizeof(char));
+		*(buffer+buffer_len) = '\0';
 	}
-	buffer[i] = '\0';
+	free(buffer_buffer_len_content);
+	free(end_of_line);
 	return buffer;
 }
 
@@ -347,7 +380,7 @@ void convert_hexa_to_binary(int *array, int mask, char hexa)
 
 long convert_char_to_int(char str)
 {
-	return str - '0' + 48;
+	return atoi(str);
 }
 
 char convert_int_to_char(long n)
