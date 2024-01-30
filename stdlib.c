@@ -81,6 +81,67 @@ const int strcontains(const char *str0, const char *str1)
 	return 1;
 }
 
+char *strconcatenate(const char *str0, const char *str1)
+{
+	char *buffer = strdup(str0);	
+	const char *str = strdup(str1);	
+	int lengh0 = strlen(str0)-1;
+	int lengh1 = strlen(str);
+	int i = lengh0;
+	buffer = (char *)realloc(buffer, (lengh0+lengh1)*sizeof(char));
+	if(buffer == NULL)
+		return NULL;
+	while((i < (lengh0+lengh1)) & (str[i-lengh0] != '\0'))
+	{
+		buffer[i] = str[i-lengh0];
+		i = i+1;	
+	}
+	buffer[i] = '\0';
+	return buffer;	
+}
+
+char **get_data_by_key(char *buffer, char *key, int number_of_lines)
+{
+	char **array = (char **)malloc(sizeof(char *));
+	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
+	char *data = (char *)malloc(sizeof(char));
+	int len = 0;
+	int i = 0;
+	int c = 0;
+	while(buffer[len] != '\0')
+	{
+		while(i < strlen(key))
+		{
+			cmp[i] = buffer[len+i];
+			i = i +1;	
+		}
+		i = 0;
+		if(strcmp(cmp, key) == 0)
+		{
+			while(buffer[len] != '\n')
+			{
+				data[i] = buffer[len];
+				i = i +1;
+				len = len +1;
+				data = (char *)realloc(data, (i+1)*sizeof(char));
+			}
+			data[i] = '\0';
+			i = 0;
+			array[c] = strdup(data);
+			free(data);
+			data = (char *)malloc(sizeof(char));
+			c = c +1;
+			array = (char **)realloc(array, (c+1)*sizeof(char *));
+		}
+		len = len +1;
+		if((c == number_of_lines)|(number_of_lines != -1))
+			break;
+	}
+	array[c] = '\0';
+	free(cmp);
+	return array;	
+}
+
 char **strsplit(char *str, char *spliter)
 {
 	char **array = (char **)malloc(1*sizeof(char *));
@@ -130,6 +191,46 @@ char **strsplit(char *str, char *spliter)
 	return array;
 }
 
+char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *end)
+{
+	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
+	char *data = (char *)malloc(sizeof(char));
+	int len = 0;
+	int i = 0;
+	int j = 0;
+	while(buffer[len] != '\0')
+	{
+		while(i < strlen(key))
+		{
+			cmp[i] = buffer[len+i];
+			i = i +1;	
+		}
+		cmp[i] = '\0';
+		i = 0;
+		if(strcmp(cmp, key) == 0)
+		{
+			while(strcmp(cmp, end) != 0)
+			{
+				data[j] = buffer[len];
+				j = j +1;
+				len = len +1;
+				data = (char *)realloc(data, (j+1)*sizeof(char));
+				while(i < strlen(key))
+				{	
+					cmp[i] = buffer[len+i]; 
+					i = i +1;
+				}
+				cmp[i] = '\0';
+				i = 0;
+			}
+			break;
+		}
+		len = len +1;
+	}
+	data[j] = '\0';	
+	return data;
+}	
+
 char *read_io()
 {
 	int i = 0;
@@ -162,25 +263,6 @@ char *read_file(const char *restrict file_name, const char *restrict mode)
 	}while(*(buffer+((buffer_len-1)*sizeof(char))) != EOF);
 	*(buffer+((buffer_len-1)*sizeof(char))) = '\0';
 	return buffer;
-}
-
-char *strconcatenate(const char *str0, const char *str1)
-{
-	char *buffer = strdup(str0);	
-	const char *str = strdup(str1);	
-	int lengh0 = strlen(str0)-1;
-	int lengh1 = strlen(str);
-	int i = lengh0;
-	buffer = (char *)realloc(buffer, (lengh0+lengh1)*sizeof(char));
-	if(buffer == NULL)
-		return NULL;
-	while((i < (lengh0+lengh1)) & (str[i-lengh0] != '\0'))
-	{
-		buffer[i] = str[i-lengh0];
-		i = i+1;	
-	}
-	buffer[i] = '\0';
-	return buffer;	
 }
 
 const int shift_mask_left(const int mask, const int i)
@@ -307,85 +389,3 @@ void print(const char *str, const char *type)
                 fwrite(str+(buffer_len*sizeof(char)), sizeof(char), 1, stdout);
         }
 }
-
-char **get_data_by_key(char *buffer, char *key, int number_of_lines)
-{
-	char **array = (char **)malloc(sizeof(char *));
-	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
-	char *data = (char *)malloc(sizeof(char));
-	int len = 0;
-	int i = 0;
-	int c = 0;
-	while(buffer[len] != '\0')
-	{
-		while(i < strlen(key))
-		{
-			cmp[i] = buffer[len+i];
-			i = i +1;	
-		}
-		i = 0;
-		if(strcmp(cmp, key) == 0)
-		{
-			while(buffer[len] != '\n')
-			{
-				data[i] = buffer[len];
-				i = i +1;
-				len = len +1;
-				data = (char *)realloc(data, (i+1)*sizeof(char));
-			}
-			data[i] = '\0';
-			i = 0;
-			array[c] = strdup(data);
-			free(data);
-			data = (char *)malloc(sizeof(char));
-			c = c +1;
-			array = (char **)realloc(array, (c+1)*sizeof(char *));
-		}
-		len = len +1;
-		if((c == number_of_lines)|(number_of_lines != -1))
-			break;
-	}
-	array[c] = '\0';
-	free(cmp);
-	return array;	
-}
-
-char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *end)
-{
-	char *cmp = (char *)malloc(strlen(key)*sizeof(char));
-	char *data = (char *)malloc(sizeof(char));
-	int len = 0;
-	int i = 0;
-	int j = 0;
-	while(buffer[len] != '\0')
-	{
-		while(i < strlen(key))
-		{
-			cmp[i] = buffer[len+i];
-			i = i +1;	
-		}
-		cmp[i] = '\0';
-		i = 0;
-		if(strcmp(cmp, key) == 0)
-		{
-			while(strcmp(cmp, end) != 0)
-			{
-				data[j] = buffer[len];
-				j = j +1;
-				len = len +1;
-				data = (char *)realloc(data, (j+1)*sizeof(char));
-				while(i < strlen(key))
-				{	
-					cmp[i] = buffer[len+i]; 
-					i = i +1;
-				}
-				cmp[i] = '\0';
-				i = 0;
-			}
-			break;
-		}
-		len = len +1;
-	}
-	data[j] = '\0';	
-	return data;
-}	
