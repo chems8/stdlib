@@ -56,7 +56,7 @@ char *strstrip(const char *s, const char c)
 		}
 		j = j +1;
 	}
-	string[i] = '\0';
+	string[i-1] = '\0';
 	return string;
 }
 
@@ -249,7 +249,7 @@ char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *en
 				cmp[i] = '\0';
 				i = 0;
 			}
-			break;
+			buffer[len] = '\0';
 		}
 		len = len +1;
 	}
