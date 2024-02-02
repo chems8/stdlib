@@ -249,7 +249,7 @@ char *get_data_by_key_until_end(const char *restrict buffer, char *key, char *en
 				cmp[i] = '\0';
 				i = 0;
 			}
-			buffer[len] = '\0';
+			break;
 		}
 		len = len +1;
 	}
