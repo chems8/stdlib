@@ -316,8 +316,9 @@ const int shift_result_right(const int number, const int i)
 	return result;
 }
 
-void convert_integer_to_binary(int *restrict array, const int mask, const int number, const int length)
+int *convert_integer_to_binary(const int mask, const int number, const int length)
 {
+	int *restrict array = (int *)malloc(length*sizeof(int));
 	int i = 0;
 	while(i < length)
 	{
