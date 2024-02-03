@@ -13,7 +13,7 @@ char *read_file(const char *restrict file_name, const char *restrict mode);
 const int shift_mask_left(const int mask, const int i);
 const int and_operation(const int number, const int mask_shifted);
 const int shift_result_right(const int number, const int i);
-void *convert_integer_to_binary(int *array, int mask, const int number);
+void *convert_integer_to_binary(int *restrict array, const int mask, const int number, const int architecture);
 int convert_hexa_to_int(char hexa);
 void convert_hexa_to_binary(int *array, int mask, char hexa);
 long convert_char_to_int(char *c);

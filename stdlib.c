@@ -316,10 +316,10 @@ const int shift_result_right(const int number, const int i)
 	return result;
 }
 
-void convert_integer_to_binary(int *array, int mask, const int number)
+void convert_integer_to_binary(int *restrict array, const int mask, const int number, const int architecture)
 {
 	int i = 0;
-	while(i < 32)
+	while(i < architecture)
 	{
 		const int mask_shifted = shift_mask_left(mask, i);
 		const int and_result = and_operation(number, mask_shifted);
