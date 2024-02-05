@@ -4,7 +4,7 @@
 
 long unsigned int strlen(const char *str)
 {
-	int lengh = 0;
+	long unsigned int lengh = 0;
 	while(str[lengh] != '\0')
 	{
 		lengh = lengh +1;
@@ -31,13 +31,13 @@ char *strdup(const char *str)
 	char *dupofstr = (char *)malloc(strlen(str)*sizeof(char));
 	if(dupofstr == NULL)
 		return NULL;
-	int lengh = 0;
-	while(str[lengh] != '\0')
+	int length = 0;
+	while(str[length] != '\0')
 	{
-		dupofstr[lengh] = str[lengh];
-		lengh = lengh +1;
+		dupofstr[length] = str[length];
+		length = length +1;
 	}
-	dupofstr[lengh] = str[lengh];
+	dupofstr[length] = str[length];
 	return dupofstr;
 }
 
@@ -86,7 +86,7 @@ char *strconcatenate(const char *str0, const char *str1)
 	char *buffer = strdup(str0);	
 	const char *str = strdup(str1);	
 	int lengh0 = strlen(str0)-1;
-	int lengh1 = strlen(str);
+	int lengh1 = strlen(str1);
 	int i = lengh0;
 	buffer = (char *)realloc(buffer, (lengh0+lengh1)*sizeof(char));
 	if(buffer == NULL)
@@ -316,9 +316,8 @@ const int shift_result_right(const int number, const int i)
 	return result;
 }
 
-int *convert_integer_to_binary(const int mask, const int number, const int length)
+void convert_integer_to_binary(int *restrict array, const int number, const int mask, const int length)
 {
-	int *restrict array = (int *)malloc(length*sizeof(int));
 	int i = 0;
 	while(i < length)
 	{
@@ -366,7 +365,7 @@ int convert_hexa_to_int(char hexa)
 	return -1;
 }
 
-void convert_hexa_to_binary(int *array, int mask, char hexa)
+void convert_hexa_to_binary(int *restrict array, char hexa, int mask)
 {
 	const int number = convert_hexa_to_int(hexa);
 	int i = 0;
@@ -422,4 +421,24 @@ void print(const char *str, const char *type)
                 }
                 fwrite(str+(buffer_len*sizeof(char)), sizeof(char), 1, stdout);
         }
+}
+
+int *concatenate_int_arrays(int *restrict array0, int length0, int *restrict array1, int length1)
+{
+	int i = 0;
+	int j = 0;
+	int length = 0;
+	int *array = (int *)malloc((length0+length1)*sizeof(int));
+	
+	while(i < length0)
+	{
+		array[i] = array0[i];
+		i = i +1;	
+	}
+	while(i < (length0+length1))
+	{
+		array[i] = array1[i-length0];
+		i = i +1;
+	}
+	return array;
 }
