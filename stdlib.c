@@ -16,12 +16,12 @@ long unsigned int strlen(const char *str)
 const int strcmp(const char *str0, const char *str1)
 {
 	int i = 0;
-	while((str0[i] == str1[i]) & ((str0[i] != '\0') | (str1[i] != '\0')))
+	while((str0[i] == str1[i]) & ((str0[i] != '\0') & (str1[i] != '\0')))
 	{
 		i = i +1;
 	}
 	i = i +1;	
-	if(strlen(str1) != i)
+	if(strlen(str0) != i)
 		return 1;
 	return 0;
 }
