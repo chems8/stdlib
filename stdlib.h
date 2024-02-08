@@ -21,3 +21,4 @@ char convert_int_to_char(long n);
 int convert_binary_to_integer(int *array, int architecture);
 void print(const char *str, const char *type);
 int *concatenate_int_arrays(int *restrict array0, int length0, int *restrict array1, int length1);
+void write_to_file(char *file_name, char *buffer);

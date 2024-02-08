@@ -442,3 +442,14 @@ int *concatenate_int_arrays(int *restrict array0, int length0, int *restrict arr
 	}
 	return array;
 }
+
+void write_to_file(char *file_name, char *buffer)
+{
+	FILE *restrict file = fopen(file_name, "w\0");
+	int buffer_len = 0;
+	while(buffer[buffer_len] != '\0')
+	{
+		fwrite(buffer+(buffer_len*sizeof(char)), sizeof(char), 1, file);
+		buffer_len = buffer_len +1;
+	}
+}
