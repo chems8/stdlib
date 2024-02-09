@@ -188,8 +188,7 @@ char **strsplit(char *str, char *spliter)
 		j = 0;
 		while(strcmp(data, spliter) == 1)
 		{
-			free(data);
-			data = (char *)malloc(strlen(spliter)*sizeof(char));	
+			data = (char *)memset((void *)data, 0, strlen(spliter)*sizeof(char));
 			while(j < strlen(spliter)-1)
 			{
 				buffer[c] = str[i+j];	
@@ -281,8 +280,9 @@ char *read_io()
 	return buffer;
 }
 
-char *read_file(const char *restrict file_name, const char *restrict mode)
+char *read_file(const char *restrict file_name)
 {
+	const char *restrict mode = strdup("r\0");
 	FILE *restrict fd = fopen(file_name, mode);
 	if(fd == NULL)
 		return NULL;
@@ -291,7 +291,7 @@ char *read_file(const char *restrict file_name, const char *restrict mode)
 	do
 	{
 		buffer_len = buffer_len +1;
-		fread(&(*(buffer+((buffer_len-1)*sizeof(char)))), sizeof(char), 1, fd);
+		fread(buffer+((buffer_len-1)*sizeof(char)), sizeof(char), 1, fd);
 		buffer = (char *)realloc(buffer, (buffer_len+1)*sizeof(char));
 	}while(*(buffer+((buffer_len-1)*sizeof(char))) != EOF);
 	*(buffer+((buffer_len-1)*sizeof(char))) = '\0';
