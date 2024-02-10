@@ -154,6 +154,7 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 			data[i] = '\0';
 			i = 0;
 			array[c] = strdup(data);
+			printf("%s\n", array[c]);
 			free(data);
 			data = (char *)malloc(sizeof(char));
 			c = c +1;
@@ -172,7 +173,6 @@ char **strsplit(char *str, char *spliter)
 {
 	char **array = (char **)malloc(1*sizeof(char *));
 	char *data = (char *)malloc(strlen(spliter)*sizeof(char));	
-	char *buffer = (char *)malloc(sizeof(char));
 	int c = 0;
 	int i = 0;
 	int j = 0;
@@ -189,26 +189,24 @@ char **strsplit(char *str, char *spliter)
 		while(strcmp(data, spliter) == 1)
 		{
 			data = (char *)memset((void *)data, 0, strlen(spliter)*sizeof(char));
-			while(j < strlen(spliter)-1)
+			array[a] = (char *)malloc(sizeof(char));
+			while(j < strlen(spliter)-1)	
 			{
-				buffer[c] = str[i+j];	
+				array[a][c] = str[i+j];
 				data[j] = str[i+j];
 				j = j +1;
 				c = c +1;
-				buffer = (char *)realloc(buffer, (c+1)*sizeof(char));
+				array[a] = (char *)realloc(array[a], (c+1)*sizeof(char));
 			}
 			data[j] = '\0';
 			i = i +j;
 			j = 0;
 			if(strcmp(data, spliter) == 0)
 			{
-				buffer[c] = '\0';
+				array[a][c] = '\0';
 				c = 0;
-				array[a] = strdup(buffer); 	
 				a = a +1;
 				array = (char **)realloc(array, (a+1)*sizeof(char *));
-				free(buffer);
-				buffer = (char *)malloc(sizeof(char));
 			}
 		}
 	}
