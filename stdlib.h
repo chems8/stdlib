@@ -1,3 +1,4 @@
+void dd_0(void *ptr, int c, int length);
 long unsigned int strlen(const char *str);
 const int strcmp(const char *str0, const char *str1);
 char *strdup(const char *str);
@@ -10,9 +11,9 @@ char **strsplit(char *str, char *spliter);
 char *get_data_by_key_until_end(char *buffer, char *key, char *end);
 char *read_io();
 char *read_file(const char *restrict file_name);
-const int shift_mask_left(const int mask, const int i);
+const int shift_left(const int mask, const int i);
 const int and_operation(const int number, const int mask_shifted);
-const int shift_result_right(const int number, const int i);
+const int shift_right(const int number, const int i);
 int *convert_integer_to_binary(int *restrict array, const int number, const int mask, const int length);
 int convert_hexa_to_int(char hexa);
 int *convert_hexa_to_binary(int *restrict array, char hexa, int mask);

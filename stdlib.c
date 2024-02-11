@@ -2,15 +2,30 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+void dd_0(void *ptr, int c, int length)
+{
+	int i = 0;
+	while(i < length)
+	{
+		if(sizeof(*ptr) == sizeof(char))
+		{
+			*((char*)(ptr+(i*sizeof(char)))) = c;
+		}else if(sizeof(*ptr) == sizeof(int))
+		{
+			*((int *)(ptr+(i*sizeof(int)))) = c;	
+		}
+		i = i +1;
+	}
+}
+
 long unsigned int strlen(const char *str)
 {
-	long unsigned int lengh = 0;
-	while(str[lengh] != '\0')
+	long unsigned int length = 0;
+	while(str[length] != '\0')
 	{
-		lengh = lengh +1;
+		length = length +1;
 	}
-	lengh = lengh +1;
-	return lengh;
+	return length;
 }	
 
 const int strcmp(const char *str0, const char *str1)
@@ -28,7 +43,7 @@ const int strcmp(const char *str0, const char *str1)
 
 char *strdup(const char *str)
 {
-	char *dupofstr = (char *)malloc(strlen(str)*sizeof(char));
+	char *dupofstr = (char *)malloc((strlen(str)+1)*sizeof(char));
 	if(dupofstr == NULL)
 		return NULL;
 	int length = 0;
@@ -73,7 +88,7 @@ const int strcontains(const char *str0, const char *str1)
 			i = i +1;
 			j = 0;
 		}
-		if((j+1) == strlen(str1))
+		if(j == strlen(str1))
 		{
 			return 0;
 		}
@@ -88,13 +103,13 @@ char *strconcatenate(const char *str0, const char *str1)
 	int lengh0 = strlen(str0)-1;
 	int lengh1 = strlen(str1);
 	int i = lengh0;
-	buffer = (char *)realloc(buffer, (lengh0+lengh1)*sizeof(char));
+	buffer = (char *)realloc(buffer, (lengh0+lengh1+1)*sizeof(char));
 	if(buffer == NULL)
 		return NULL;
 	while((i < (lengh0+lengh1)) & (str[i-lengh0] != '\0'))
 	{
 		buffer[i] = str[i-lengh0];
-		i = i+1;	
+		i = i +1;	
 	}
 	buffer[i] = '\0';
 	return buffer;	
@@ -108,7 +123,7 @@ int find_string_position(char *buffer, char *string, int position)
 	char *str = (char *)malloc(strlen(string)*sizeof(char));
 	while(buffer[i] != '\0')
 	{
-		while(j < strlen(string)-1)
+		while(j < strlen(string))
 		{	
 			str[j] = buffer[i];
 			i = i +1;
@@ -166,13 +181,14 @@ char **get_data_by_key(char *buffer, char *key, int number_of_lines)
 	}
 	array[c] = '\0';
 	free(cmp);
-	return array;	
+	return array;
 }
 
 char **strsplit(char *str, char *spliter)
 {
 	char **array = (char **)malloc(1*sizeof(char *));
 	char *data = (char *)malloc(strlen(spliter)*sizeof(char));	
+	char *buffer = (char *)malloc(sizeof(char));
 	int c = 0;
 	int i = 0;
 	int j = 0;
@@ -182,33 +198,36 @@ char **strsplit(char *str, char *spliter)
 		while(j < strlen(spliter)-1)
 		{
 			data[j] = str[i+j];
-			j =j +1;
+			j = j +1;
 		}
-		data[j] = '\0';
 		j = 0;
+		data[j] = '\0';
 		while(strcmp(data, spliter) == 1)
 		{
-			data = (char *)memset((void *)data, 0, strlen(spliter)*sizeof(char));
-			array[a] = (char *)malloc(sizeof(char));
-			while(j < strlen(spliter)-1)	
+			dd_0(data, 0, strlen(spliter));
+			while(j < strlen(spliter))
 			{
-				array[a][c] = str[i+j];
+				buffer[c] = str[i+j];	
 				data[j] = str[i+j];
 				j = j +1;
 				c = c +1;
-				array[a] = (char *)realloc(array[a], (c+1)*sizeof(char));
+				buffer = (char *)realloc(buffer, (c+1)*sizeof(char));
 			}
 			data[j] = '\0';
 			i = i +j;
 			j = 0;
 			if(strcmp(data, spliter) == 0)
 			{
-				array[a][c] = '\0';
+				buffer[c] = '\0';
 				c = 0;
+				array[a] = strdup(buffer); 	
 				a = a +1;
 				array = (char **)realloc(array, (a+1)*sizeof(char *));
+				free(buffer);
+				buffer = (char *)malloc(sizeof(char));
 			}
 		}
+		i = i +1;
 	}
 	array[a] = '\0';
 	return array;
@@ -280,23 +299,28 @@ char *read_io()
 
 char *read_file(const char *restrict file_name)
 {
-	const char *restrict mode = strdup("r\0");
-	FILE *restrict fd = fopen(file_name, mode);
-	if(fd == NULL)
+	int fd = open(file_name, 'r');
+	if(fd == -1)
 		return NULL;
-	char *buffer = (char *)malloc(sizeof(char));
+	char *buffer;
 	int buffer_len = 0;
-	do
+	buffer = (char *)malloc(sizeof(char));
+	if(buffer == NULL)
+		return NULL;
+	while(read(fd, &(*(buffer+buffer_len)), sizeof(char)) > 0)
 	{
-		buffer_len = buffer_len +1;
-		fread(buffer+((buffer_len-1)*sizeof(char)), sizeof(char), 1, fd);
+		buffer_len = buffer_len + 1;
 		buffer = (char *)realloc(buffer, (buffer_len+1)*sizeof(char));
-	}while(*(buffer+((buffer_len-1)*sizeof(char))) != EOF);
-	*(buffer+((buffer_len-1)*sizeof(char))) = '\0';
+		if(buffer == NULL)
+			return NULL;
+	}
+	*(buffer+buffer_len) = '\0';
+	close(fd);
 	return buffer;
 }
 
-const int shift_mask_left(const int mask, const int i)
+
+const int shift_left(const int mask, const int i)
 {
 	const int mask_shifted = mask << i;
 	return mask_shifted;
@@ -308,7 +332,7 @@ const int and_operation(const int number, const int mask_shifted)
 	return result;
 }
 
-const int shift_result_right(const int number, const int i)
+const int shift_right(const int number, const int i)
 {
 	const int result = number >> i;
 	return result;
@@ -319,9 +343,9 @@ void convert_integer_to_binary(int *restrict array, const int number, const int 
 	int i = 0;
 	while(i < length)
 	{
-		const int mask_shifted = shift_mask_left(mask, i);
+		const int mask_shifted = shift_left(mask, i);
 		const int and_result = and_operation(number, mask_shifted);
-		array[i] = shift_result_right(and_result, i);
+		array[i] = shift_right(and_result, i);
 		i = i +1;
 	}
 }
@@ -369,9 +393,9 @@ void convert_hexa_to_binary(int *restrict array, char hexa, int mask)
 	int i = 0;
 	while(i < 4)
 	{
-		const int mask_shifted = shift_mask_left(mask, i);
+		const int mask_shifted = shift_left(mask, i);
 		const int and_result = and_operation(number, mask_shifted);
-		array[i] = shift_result_right(and_result, i); 
+		array[i] = shift_right(and_result, i); 
 		i = i +1;
 	}
 }
