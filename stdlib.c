@@ -35,7 +35,6 @@ const int strcmp(const char *str0, const char *str1)
 	{
 		i = i +1;
 	}
-	i = i +1;	
 	if(strlen(str0) != i)
 		return 1;
 	return 0;
@@ -56,23 +55,23 @@ char *strdup(const char *str)
 	return dupofstr;
 }
 
-char *strstrip(const char *s, const char c)
+char *strstrip(const char *s, const char *x)
 {
 	int i = 0;
 	int j = 0;
-	char *string = (char *)malloc(sizeof(char));
+	char *buffer = (char *)malloc(sizeof(char));
 	while(s[j] != '\0')
 	{
-		if(s[j] != c)
+		if(s[j] != *x)
 		{
-			string[i] = s[j];
+			buffer[i] = s[j];
 			i = i +1;
-			string = (char *)realloc(string, (i+1)*sizeof(char));
+			buffer = (char *)realloc(buffer, (i+1)*sizeof(char));
 		}
 		j = j +1;
 	}
-	string[i-1] = '\0';
-	return string;
+	buffer[i] = '\0';
+	return buffer;
 }
 
 const int strcontains(const char *str0, const char *str1)
@@ -196,22 +195,6 @@ char **strsplit(char *str, char *spliter)
 	int spliter_length = strlen(spliter);
 	while(str[i] != '\0')
 	{
-		if((strcmp(data, spliter) == 0) & (c > 0))
-		{
-			buffer[c] = '\0';
-			array[a] = strdup(buffer);
-			i = i +j;
-			a = a +1;
-			c = 0;
-			free(buffer);
-			array = (char **)realloc(array, (a+1)*sizeof(char *));
-			buffer = (char *)malloc(sizeof(char));
-		}else if(strcmp(data, spliter) == 1)
-		{
-			i = i +1;
-			j = 0;
-		}
-		dd_0((void *)data, 0, spliter_length);
 		while(j < spliter_length)
 		{
 			data[j] = str[i+j];
@@ -221,6 +204,24 @@ char **strsplit(char *str, char *spliter)
 			buffer = (char *)realloc(buffer, (c+1)*sizeof(char));
 		}
 		data[j] = '\0';
+		if(strcmp(data, spliter) == 0)
+		{
+			buffer[c] = '\0';
+			buffer = strstrip(buffer, spliter);
+			array[a] = strdup(buffer);
+			i = i +j;
+			j = 0;
+			a = a +1;
+			c = 0;
+			free(buffer);
+			array = (char **)realloc(array, (a+1)*sizeof(char *));
+			buffer = (char *)malloc(sizeof(char));
+		}else if(strcmp(data, spliter) == 1)
+		{
+			i = i +j;
+			j = 0;
+		}
+		dd_0((void *)data, 0, spliter_length);
 	}
 	array[a] = '\0';
 	return array;
