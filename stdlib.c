@@ -199,8 +199,8 @@ char **strsplit(char *str, char *spliter)
 		if((strcmp(data, spliter) == 0) & (c > 0))
 		{
 			buffer[c] = '\0';
-			printf("buffer = %s\n", buffer);
 			array[a] = strdup(buffer);
+			i = i +j;
 			a = a +1;
 			c = 0;
 			free(buffer);
@@ -221,8 +221,6 @@ char **strsplit(char *str, char *spliter)
 			buffer = (char *)realloc(buffer, (c+1)*sizeof(char));
 		}
 		data[j] = '\0';
-		printf("data = \"%s\"\n", data);
-		printf("c = %d\n", c);
 	}
 	array[a] = '\0';
 	return array;
