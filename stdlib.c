@@ -42,7 +42,7 @@ const int strcmp(const char *str0, const char *str1)
 
 char *strdup(const char *str)
 {
-	char *dupofstr = (char *)malloc(strlen(str)*sizeof(char));
+	char *dupofstr = (char *)malloc((strlen(str)+1)*sizeof(char));
 	if(dupofstr == NULL)
 		return NULL;
 	int length = 0;
@@ -99,7 +99,7 @@ char *strconcatenate(const char *str0, const char *str1)
 {
 	char *buffer = strdup(str0);	
 	const char *str = strdup(str1);	
-	int lengh0 = strlen(str0)-1;
+	int lengh0 = strlen(str0);
 	int lengh1 = strlen(str1);
 	int i = lengh0;
 	buffer = (char *)realloc(buffer, (lengh0+lengh1)*sizeof(char));
@@ -108,7 +108,7 @@ char *strconcatenate(const char *str0, const char *str1)
 	while((i < (lengh0+lengh1)) & (str[i-lengh0] != '\0'))
 	{
 		buffer[i] = str[i-lengh0];
-		i = i+1;	
+		i = i +1;	
 	}
 	buffer[i] = '\0';
 	return buffer;	

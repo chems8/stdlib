@@ -2,7 +2,7 @@ void dd_0(void *ptr, int c, int length);
 long unsigned int strlen(const char *str);
 const int strcmp(const char *str0, const char *str1);
 char *strdup(const char *str);
-char *strstrip(const char *s, const char c);
+char *strstrip(const char *s, const char *x);
 const int *strcontains(const char *str0, const char *str1);
 char *strconcatenate(const char *str0, const char *str1);
 int find_string_position(char *buffer, char *string, int position);
